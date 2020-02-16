@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Reproductor web de Spotify">
+        <meta name="author" content="Gonzalo Gabriel Costa">
+        <link rel="icon" href="favicon.ico">
+
+        <title>Poné Spoty!</title>
+
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link href="assets/css/cover.css" rel="stylesheet">
+        <link href="assets/css/estilo.css" rel="stylesheet">
+
+        <script src="https://kit.fontawesome.com/cdf0ba64f3.js" crossorigin="anonymous"></script>
+    </head>
+
+    <body class="text-center">
+
+        <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+            <header class="masthead mb-auto">
+                <div class="inner">
+                    <h3 class="masthead-brand"><a href="#">Poné Spoty!</a></h3>
+                    <nav class="nav nav-masthead justify-content-center">
+                        <a class="nav-link active" id="inicio-tab"  data-toggle="tab" href="#inicio" role="tab">Inicio</a>
+                        <a class="nav-link" id="escuchar-tab"  data-toggle="tab" href="#escuchar" role="tab">Escuchar</a>
+                        <a class="nav-link" id="acercade-tab"  data-toggle="tab" href="#acercade" role="tab">Acerca de</a>
+                    </nav>
+                </div>
+            </header>
+       
+
+            <main role="main" class="inner cover">
+                <div class="tab-content">
+
+                  <!-- Seccion Inicio -->
+                  <div class="tab-pane active" id="inicio" role="tabpanel" aria-labelledby="inicio-tab">
+              
+                            <h1 class="cover-heading">¿Qué es y como funciona?</h1>
+                            <p class="lead"><strong>Poné Spoty</strong> es un reproductor web minimalista, que te permite escuchar tu música usando otro dispositivo (celu, desktop,..) para controlarlo!.</p>
+                            <p>Esto te permite, por ejemplo, sacar provecho de cualquier dispositivo (SmartTV, TVBox, Raspberry Pi, IoT,...) que tenga un navegador  limitado o  bien que no este soportado por el <a href="" target="blank">reproductor oficial</a> de Spotify. </p>
+                            <p>Para comenzar a usarlo, solo debes darle permisos para que pueda reproducir música con tu cuenta</p>
+
+                            <p class="lead">
+                                <a href="#" class="btn btn-lg btn-secondary">Dame permiso!</a>
+                            </p>
+                                
+            <!-- 
+
+              <form action="https://accounts.spotify.com/en/authorize" class="no-padding" id="get-access-token">
+                <input type="hidden" name="response_type" value="token">
+                <input type="hidden" name="client_id" value="356ca34315194abd94c05ae398cc67af">
+                <input type="hidden" name="redirect_uri" data-generate-redirect-uri="true" value="URL_CALLBACK">
+                <input type="hidden" name="scope" value="streaming user-read-email user-modify-playback-state user-read-private">
+                <input type="hidden" name="show_dialog" value="false">
+
+                <button type="submit" class="btn btn-primary btn-sm">Dame permiso!</button>
+              </form>
+            -->
+
+                  </div>
+
+
+                  <!-- Seccion Escuchar -->
+                  <div class="tab-pane" id="escuchar" role="tabpanel" aria-labelledby="escuchar-tab">
+                        <h1 class="cover-heading"></h1>
+                        <p class="lead">
+                            <span class="comando" id="conectado">
+                                <i  class="fab fa-spotify"></i>
+                            </span>
+                            <span class="comando" id="reproduciendo">
+                                <i class="fas fa-stop fa-blink"></i>
+                            </span>
+                        </p>
+                        <p>
+                            <span class="modo" id="modo_repetecion">
+                                <i class="fas fa-redo-alt"></i>
+                            </span>
+                            <span class="modo" id="modo_aleatorio">
+                                <i  class="fas fa-random"></i>
+                            </span>
+                        </p>
+                  </div>
+
+
+                  <!-- Seccion Acerca de -->
+                  <div class="tab-pane" id="acercade" role="tabpanel" aria-labelledby="messages-tab">
+                      <h1 class="cover-heading">Acerca de</h1>
+                  </div>
+
+
+                </div>
+            </main>
+
+            <footer class="mastfoot mt-auto">
+                <div class="inner">
+                    <p>Cover template for <a href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+                </div>
+            </footer>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://sdk.scdn.co/spotify-player.js"></script>
+        <script src="assets/scripts/reproductor.js">
+    
+      </script>
+    </body>
+</html>
