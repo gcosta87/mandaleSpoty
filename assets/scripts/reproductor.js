@@ -1,6 +1,7 @@
-const tokenValido = 'BQAI1NZi6AzDd8ngbqVr50lk3wgKfOMwOx6BEshplkWwrcnIsfcwAhjJy0NzcJtNEfwaJIa7lj4Xnl3BWyb2qh0BuOFH-utxj38U46M6ENxgeYXDPIeQInir57s8CNI-9DYVF7_dCQWsfXi1ca1jFCOqN6QSp5TY';
-
-
+/**
+ *  Implementacion de funciones y flujos JS, para el control del Reproductor de Spotify y de la GUI
+ *
+ */
 var gui = {
     //Const
 
@@ -40,7 +41,7 @@ var gui = {
     __cambiarColorDesactivado:function(target){
         this.__cambiarColor(target,'white');
     },
-    
+
     __cambiarIcono:function(target,icono){
         target.find('i').attr('class', 'fas '+icono);
     },
@@ -51,6 +52,16 @@ var gui = {
         this.botones.reproduciendo= $('#reproduciendo');
         this.botones.modoRepetecion=$('#modo_repetecion');
         this.botones.modoAleatorio= $('#modo_aleatorio');
+
+        //inicializacion del form de Auth
+        $form = $('form#permisosForm');
+        $form.find('input[name="client_id"]').val(config.spotify.client_id);
+        $form.find('input[name="scope"]').val(config.spotify.permissions);
+        $form.find('input[name="redirect_uri"]').val(config.spotify.redirect_uri);
+
+        //seteo de numero de version
+        $version = $('sup.version');
+        $version.html(config.version);
     },
 
 
@@ -70,11 +81,11 @@ var gui = {
             case this.ESTADO_PAUSADO:       this.__cambiarColorDesactivado(boton);
                                             this.__cambiarIcono(boton, this.ICONO_BOTON_PAUSADO);
                                             break;
-            
+
             case this.ESTADO_REPRODUCIENDO: this.__cambiarColorActivado(boton);
                                             this.__cambiarIcono(boton, this.ICONO_BOTON_REPRODUCIENDO);
                                             break;
-        
+
             case this.ESTADO_DETENIDO:      this.__cambiarColorDesactivado(boton);
                                             this.__cambiarIcono(boton, this.ICONO_BOTON_DETENIDO);
                                             break;
@@ -100,24 +111,46 @@ var gui = {
             case this.MODO_REPETECION_DESACTIVADO:  this.__cambiarColor(boton,'');
                                                     this.__cambiarIcono(boton, this.ICONO_BOTON_REPETIR);
                                                     break;
-            
+
             case this.MODO_REPETECION_UNA:  this.__cambiarColorActivado(boton);
                                             this.__cambiarIcono(boton, this.ICONO_BOTON_REPETIR);
                                             break;
-        
+
             case this.MODO_REPETECION_TODO: this.__cambiarColorActivado(boton);
                                             this.__cambiarIcono(boton, this.ICONO_BOTON_REPETIR_TODO);
                                             break;
         }
     },
 
-    
+
 };
 
+/**
+ * Recupera el token recibido por "query param" (url)
+ * @returns {string} token valido, o bien un string vacio en caso contrario
+ */
+function obtenerToken(){
+    var token = '-1';
+    //intento leer el token del query params... /#access_token=aabbccc....
+    if(window.location.hash){
+        var urlSearchParams = new URLSearchParams(window.location.hash.replace('#','?'));
+        if(urlSearchParams.has('access_token')){
+            token = urlSearchParams.get('access_token');
+        }
+    }
+    else{
+        //TODO intentar recuperar de una cookie o algo similar
+    }
+    return token;
+}
 window.onSpotifyWebPlaybackSDKReady = () => {
-    const token = tokenValido;
+    /*
+    Codigo de ejemplo basado en la documentacion ofciona:
+    https://developer.spotify.com/documentation/web-playback-sdk/quick-start/
+    */
+    const token = obtenerToken();
     const $poneSpoty = new Spotify.Player({
-        name: 'Poné Spoty!',
+        name: 'ponéSpoty!',
         getOAuthToken: cb => { cb(token); }
     });
 
@@ -128,11 +161,11 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     $poneSpoty.addListener('playback_error', ({ message }) => { console.error(message); });
 
     // Playback status updates
-    $poneSpoty.addListener('player_state_changed', state => { 
+    $poneSpoty.addListener('player_state_changed', state => {
         gui.reproduciendo(state.paused? gui.ESTADO_PAUSADO:gui.ESTADO_REPRODUCIENDO);
         gui.modoAleatorio(state.shuffle);
         gui.modoRepetecion(state.repeat_mode);
-        console.log(state); 
+        console.log(state);
     });
 
     // Ready

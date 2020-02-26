@@ -1,3 +1,6 @@
+* {
+    font-family: 'Source Sans Pro','sans-serif' ;
+}
 
 /*Botones del reproductor */
 .comando{
@@ -25,3 +28,25 @@
         visibility: hidden;
       }
 }
+.poneSpoty, .poneSpoty:hover{
+    color: limegreen;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.15em;
+}
+
+/* TODO mejorar */
+main.cover{
+  min-width: 640px;
+    margin-top:20px;
+}
+
+h3.masthead-brand sup.version{
+    font-color: white;
+    font-size:0.4em;
+    margin-left: 5px;
+    top: -1em;
+}
+
+/* Github Corner*/
+.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}
