@@ -71,6 +71,9 @@ var gui = {
         //seteo de numero de version
         $version = $('sup.version');
         $version.html(config.version);
+
+        //otras configs menores
+        $('#mainLink').prop('href',config.service.base_url);
     },
 
     /**
@@ -173,9 +176,6 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     gui.inicializar();
     gui.debug(gui.DEBUG_TIPO_VERBOSE,'Inicializacion del SDK correcta!.');
 
-    //debug
-    //parcheChrome();
-
     /*
     Codigo de ejemplo basado en la documentacion ofciona:
     https://developer.spotify.com/documentation/web-playback-sdk/quick-start/
@@ -228,24 +228,3 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         $poneSpoty.connect();
     }
 };
-
-
-/**
- * Al injectarse el Player de Spotify, define un iframe de una forma que no le agrada al Chrome, es por eso que se
- * aplica este parche basado en la respuesta:
- *  https://github.com/spotify/web-playback-sdk/issues/75#issuecomment-487325589
- */
-function parcheChrome(){
-    if(navigator.appVersion.match(/Chrome|Chromium/)) {
-        gui.debug(gui.DEBUG_TIPO_VERBOSE,'Se aplica el parche para Chrome/Chromium.');
-
-        const iframe = document.querySelector('iframe[src="https://sdk.scdn.co/embedded/index.html"]');
-
-        if (iframe) {
-            iframe.style.display = 'block';
-            iframe.style.position = 'absolute';
-            iframe.style.top = '-1000px';
-            iframe.style.left = '-1000px';
-        }
-    }
-}
