@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="Reproductor web de Spotify">
+        <meta name="description" content="Reproductor web ligero para Spotify, pensado para dispositivos de bajos recursos y/o que están soportados oficialmente.">
         <meta name="author" content="Gonzalo Gabriel Costa">
         <link rel="icon" href="assets/imagenes/favicon.png">
 
@@ -48,7 +48,7 @@
                         <div class="collapse" id="collapseUsos">
                             <p>Esto te permite, por ejemplo, sacar provecho de cualquier dispositivo (SmartTV, TVBox, Raspberry Pi, IoT,...) que tenga un navegador  limitado o  bien que no este soportado por el <a href="https://open.spotify.com/" target="blank">reproductor oficial</a> de Spotify. </p>
                         </div>
-                        <p>Para comenzar a usarlo, solo debes darle permisos para que pueda reproducir música con tu cuenta</p>
+                        <p>Para comenzar a usarlo, solo debes darle permisos de «<i>streaming</i>» para que pueda reproducir música con tu cuenta</p>
 
                         <form action="https://accounts.spotify.com/en/authorize" id="permisosForm">
                             <input type="hidden" name="response_type" value="token">
@@ -85,12 +85,6 @@
                                 <i  class="fas fa-random"></i>
                             </span>
                         </p>
-                        <!--
-                        <div class="alert alert-info" id="playerAlert">
-                            <button type="button" class="close" data-dismiss="alert">x</button>
-                            <span id="playerAlert-msj">Product have added to your wishlist.</span>
-                        </div>
-                        -->
                     </div>
 
                     <!-- Seccion debugLog -->
