@@ -48,5 +48,35 @@ h3.masthead-brand sup.version{
     top: -1em;
 }
 
+p.hechoen{
+    font-weight: bold;
+    height: 6vh;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+p.hechoen img{
+    width: 1em;
+    opacity: 0.6;
+    transition: width 1s, opacity 2s;
+    margin-top:1em;
+    margin-bottom:1em;
+}
+p.hechoen img:hover{
+    width: 1.8em;
+    opacity: 1;
+}
+
+textarea#debugLog {
+    background: transparent;
+    color: #ccc;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+
+p.copyright{
+    font-size: 0.8em;
+}
 /* Github Corner*/
 .github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}

@@ -24,9 +24,10 @@
                 <div class="inner">
                     <h3 class="masthead-brand"><a href="/" class="poneSpoty">ponéSpoty!</a><sup class="version"></sup></h3>
                     <nav class="nav nav-masthead justify-content-center">
-                        <a class="nav-link active" id="inicio-tab"  data-toggle="tab" href="#inicio" role="tab">Inicio</a>
-                        <a class="nav-link" id="escuchar-tab"  data-toggle="tab" href="#escuchar" role="tab">Mandale Play!</a>
-                        <a class="nav-link" id="acercade-tab"  data-toggle="tab" href="#acercade" role="tab">Acerca de</a>
+                        <a tabindex="1" class="nav-link active" id="inicio-tab"  data-toggle="tab" href="#inicio" role="tab"><i class="fas fa-home fa-fw"></i> inicio</a>
+                        <a tabindex="2" class="nav-link" id="escuchar-tab"  data-toggle="tab" href="#escuchar" role="tab"><i class="fas fa-play fa-fw"></i> mandale play!</a>
+                        <a tabindex="3" class="nav-link" id="acercade-tab"  data-toggle="tab" href="#acercade" role="tab"><i class="fas fa-info fa-fw"></i> acerca de</a>
+                        <a tabindex="4"  class="nav-link" id="debug-tab"  data-toggle="tab" href="#debug" role="tab"><i class="fas fa-bug fa-fw"></i> debug</a>
                     </nav>
                 </div>
             </header>
@@ -35,45 +36,35 @@
             <main role="main" class="inner cover">
                 <div class="tab-content">
 
-                  <!-- Seccion Inicio -->
-                  <div class="tab-pane active" id="inicio" role="tabpanel" aria-labelledby="inicio-tab">
-                      <h1 class="cover-heading">¿Qué es y cómo funciona?</h1>
-                      <p class="lead"><span class="poneSpoty">ponéSpoty!</span> es un reproductor web ligero, que te permite escuchar tu música usando otro dispositivo (<i class="fas fa-mobile-alt" title="celu"></i>, <i class="fas fa-desktop" title="desktop"></i>,..) conectado a Spotify para controlarlo!.</p>
-                      <p>
-                          <a class="btn btn-primary btn-sm" data-toggle="collapse" href="#collapseUsos" role="button" aria-expanded="false" aria-controls="collapseUsos">
-                              <i class="far fa-question-circle"></i>
-                          </a>
-                      </p>
+                    <!-- Seccion Inicio -->
+                    <div class="tab-pane active" id="inicio" role="tabpanel" aria-labelledby="inicio-tab">
+                        <h1 class="cover-heading">¿Qué es y cómo funciona?</h1>
+                        <p class="lead"><span class="poneSpoty">ponéSpoty!</span> es un reproductor web ligero, que te permite escuchar tu música usando otro dispositivo (<i class="fas fa-mobile-alt" title="celu"></i>, <i class="fas fa-desktop" title="desktop"></i>,..) conectado a Spotify para controlarlo!.</p>
+                        <p>
+                            <a tabindex="5" class="btn btn-primary btn-sm" data-toggle="collapse" href="#collapseUsos" role="button" aria-expanded="false" aria-controls="collapseUsos">
+                                <i class="far fa-question-circle"></i>
+                            </a>
+                        </p>
+
+                        <div class="collapse" id="collapseUsos">
+                            <p>Esto te permite, por ejemplo, sacar provecho de cualquier dispositivo (SmartTV, TVBox, Raspberry Pi, IoT,...) que tenga un navegador  limitado o  bien que no este soportado por el <a href="https://open.spotify.com/" target="blank">reproductor oficial</a> de Spotify. </p>
+                        </div>
+                        <p>Para comenzar a usarlo, solo debes darle permisos para que pueda reproducir música con tu cuenta</p>
+
+                        <form action="https://accounts.spotify.com/en/authorize" id="permisosForm">
+                            <input type="hidden" name="response_type" value="token">
+                            <input type="hidden" name="client_id" value="">
+                            <input type="hidden" name="redirect_uri" value="">
+                            <input type="hidden" name="scope" value="">
+                            <input type="hidden" name="show_dialog" value="false">
+
+                            <button tabindex="6" type="submit" class="btn btn-lg btn-success btn-block">Dame permiso!</button>
+                        </form>
+                    </div>
 
 
-                      <div class="collapse" id="collapseUsos">
-                          <p>Esto te permite, por ejemplo, sacar provecho de cualquier dispositivo (SmartTV, TVBox, Raspberry Pi, IoT,...) que tenga un navegador  limitado o  bien que no este soportado por el <a href="https://open.spotify.com/" target="blank">reproductor oficial</a> de Spotify. </p>
-                      </div>
-                      <p>Para comenzar a usarlo, solo debes darle permisos para que pueda reproducir música con tu cuenta</p>
-
-
-
-
-              <form action="https://accounts.spotify.com/en/authorize" id="permisosForm">
-                <input type="hidden" name="response_type" value="token">
-                <input type="hidden" name="client_id" value="">
-                <input type="hidden" name="redirect_uri" value="">
-                <input type="hidden" name="scope" value="">
-                <input type="hidden" name="show_dialog" value="false">
-
-                <button type="submit" class="btn btn-lg btn-success btn-block">Dame permiso!</button>
-              </form>
-
-                                <!-- <a href="#" class="btn btn-lg btn-primary">Dame permiso!</a> -->
-
-
-
-
-                  </div>
-
-
-                  <!-- Seccion Escuchar -->
-                  <div class="tab-pane" id="escuchar" role="tabpanel" aria-labelledby="escuchar-tab">
+                    <!-- Seccion Escuchar -->
+                    <div class="tab-pane" id="escuchar" role="tabpanel" aria-labelledby="escuchar-tab">
                         <h1 class="cover-heading"></h1>
                         <p class="lead">
                             <span class="comando" id="conectado">
@@ -91,13 +82,25 @@
                                 <i  class="fas fa-random"></i>
                             </span>
                         </p>
-                  </div>
+                    </div>
 
 
-                  <!-- Seccion Acerca de -->
-                  <div class="tab-pane" id="acercade" role="tabpanel" aria-labelledby="messages-tab">
-                      <h1 class="cover-heading">Acerca de</h1>
-                  </div>
+                    <!-- Seccion Acerca de -->
+                    <div class="tab-pane" id="acercade" role="tabpanel" aria-labelledby="acercade-tab">
+                        <h1 class="cover-heading">Acerca de</h1>
+                    </div>
+
+                    <!-- Seccion debugLog -->
+                    <div class="tab-pane" id="debug" role="tabpanel" aria-labelledby="debug-tab">
+                        <h1 class="cover-heading"><i class="fas fa-bug fa-fw"></i> debug</h1>
+                        <form id="formLog">
+                            <div class="form-group">
+                                <textarea class="form-control" id="debugLog" rows="10" wrap="off"></textarea>
+                            </div>
+                            <input tabindex="5"  type="reset" class="btn btn-sm btn-outline-primary" value="Limpiar" onclick="$('#formLog textarea').val('');"/>
+                        </form>
+                    </div>
+
 
 
                 </div>
@@ -105,12 +108,15 @@
 
             <footer class="mastfoot mt-auto">
                 <div class="inner">
-                    <p>Cover template for <a href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+                    <p class="hechoen">
+                        <img width="1em" src="assets/imagenes/Bicentenario.svg" alt="Programado en Argentina" title="Programado en Argentina"/>
+                    </p>
+                    <p class="copyright">Cover template by <a  tabindex="-1"  href="https://twitter.com/mdo" target="_blank">@mdo</a>.</p>
                 </div>
             </footer>
         </div>
 
-        <a href="https://github.com/gcosta87/poneSpoty" class="github-corner" aria-label="Mejorame en GitHub" title="Mejorame en GitHub!" target="blank"><img width="80" height="80" src="assets/imagenes/github-corner.svg" /></a>
+        <a tabindex="-1" href="https://github.com/gcosta87/poneSpoty" class="github-corner" aria-label="Mejorame en GitHub" title="Mejorame en GitHub!" target="_blank"><img width="80" height="80" src="assets/imagenes/github-corner.svg" /></a>
 
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

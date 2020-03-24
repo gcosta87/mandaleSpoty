@@ -2,6 +2,12 @@
  *  Implementacion de funciones y flujos JS, para el control del Reproductor de Spotify y de la GUI
  *
  */
+// Representacion del token no valido
+const TOKEN_NO_VALIDO = '-1';
+
+// Instancia del reproductor
+$poneSpoty = null;
+
 var gui = {
     //Const
 
@@ -13,7 +19,8 @@ var gui = {
     MODO_REPETECION_TODO        : 1,
     MODO_REPETECION_UNA         : 2,
 
-
+    DEBUG_TIPO_VERBOSE: 'debug',
+    DEBUG_TIPO_ERROR: 'error',
 
     ICONO_BOTON_REPRODUCIENDO   : 'fa-play',
     ICONO_BOTON_PAUSADO         : 'fa-pause',
@@ -29,10 +36,10 @@ var gui = {
         modoRepetecion:null,
         modoAleatorio: null
     },
+
+    $debug: null,
     //Seters / funciones basicas
     __cambiarColor:function(target,color){
-        console.log('color '+color);
-
         target.css("color",color);
     },
     __cambiarColorActivado:function(target){
@@ -53,6 +60,8 @@ var gui = {
         this.botones.modoRepetecion=$('#modo_repetecion');
         this.botones.modoAleatorio= $('#modo_aleatorio');
 
+        this.$debug = $('textarea#debugLog');
+
         //inicializacion del form de Auth
         $form = $('form#permisosForm');
         $form.find('input[name="client_id"]').val(config.spotify.client_id);
@@ -64,6 +73,19 @@ var gui = {
         $version.html(config.version);
     },
 
+    /**
+     *
+     * @param tipo usa las constantes DEBUG_TIPO_ERROR|DEBUG_TIPO_VERBOSE
+     * @param msj string mensaje
+     */
+    debug:function(tipo,msj){
+        //Solo se imprimen los
+        if(!(config.debug_enable_verbose == false && tipo == this.DEBUG_TIPO_VERBOSE)){
+            var now = new Date();
+            var fechaString = now.getHours().toString().padStart(2, '0')+":"+now.getMinutes().toString().padStart(2, '0');
+            this.$debug.append("[" + fechaString + " " + (tipo == this.DEBUG_TIPO_ERROR? "***"+tipo.toUpperCase()+"***":tipo) + "]: " + msj + "\n");
+        }
+    },
 
     conectado:function(conectado){
         if(conectado){
@@ -130,57 +152,100 @@ var gui = {
  * @returns {string} token valido, o bien un string vacio en caso contrario
  */
 function obtenerToken(){
-    var token = '-1';
+    var token = TOKEN_NO_VALIDO;
+    gui.debug(gui.DEBUG_TIPO_VERBOSE,'Obtencion del Token...');
     //intento leer el token del query params... /#access_token=aabbccc....
     if(window.location.hash){
+        gui.debug(gui.DEBUG_TIPO_VERBOSE,'Presencia de token en URL, se procede a extraerlo.');
         var urlSearchParams = new URLSearchParams(window.location.hash.replace('#','?'));
         if(urlSearchParams.has('access_token')){
             token = urlSearchParams.get('access_token');
+            gui.debug(gui.DEBUG_TIPO_VERBOSE,'se extrajo el token correctamente!.');
         }
     }
     else{
+        gui.debug(gui.DEBUG_TIPO_VERBOSE,'Token no hallado en URL.');
         //TODO intentar recuperar de una cookie o algo similar
     }
     return token;
 }
 window.onSpotifyWebPlaybackSDKReady = () => {
+    gui.inicializar();
+    gui.debug(gui.DEBUG_TIPO_VERBOSE,'Inicializacion del SDK correcta!.');
+
+    //debug
+    //parcheChrome();
+
     /*
     Codigo de ejemplo basado en la documentacion ofciona:
     https://developer.spotify.com/documentation/web-playback-sdk/quick-start/
     */
     const token = obtenerToken();
-    const $poneSpoty = new Spotify.Player({
-        name: 'ponéSpoty!',
-        getOAuthToken: cb => { cb(token); }
-    });
+    if(token != TOKEN_NO_VALIDO) {
+        $poneSpoty = new Spotify.Player({
+            name: 'ponéSpoty!',
+            getOAuthToken: cb => {
+                cb(token);
+            }
+        });
 
-    // Error handling
-    $poneSpoty.addListener('initialization_error', ({ message }) => { console.error(message); });
-    $poneSpoty.addListener('authentication_error', ({ message }) => { console.error(message); });
-    $poneSpoty.addListener('account_error', ({ message }) => { console.error(message); });
-    $poneSpoty.addListener('playback_error', ({ message }) => { console.error(message); });
+        // Error handling
+        $poneSpoty.addListener('initialization_error', ({message}) => {
+            gui.debug(gui.DEBUG_TIPO_ERROR, 'Ocurrio un error al inicializar:  ' + message);
+        });
+        $poneSpoty.addListener('authentication_error', ({message}) => {
+            gui.debug(gui.DEBUG_TIPO_ERROR, 'Ocurrio un error al autenticar:  ' + message);
+        });
+        $poneSpoty.addListener('account_error', ({message}) => {
+            gui.debug(gui.DEBUG_TIPO_ERROR, 'Ocurrio un error asociado a la cuenta de usuario:  ' + message);
+        });
+        $poneSpoty.addListener('playback_error', ({message}) => {
+            gui.debug(gui.DEBUG_TIPO_ERROR, 'Ocurrio un error al reproducir:  ' + message);
+        });
 
-    // Playback status updates
-    $poneSpoty.addListener('player_state_changed', state => {
-        gui.reproduciendo(state.paused? gui.ESTADO_PAUSADO:gui.ESTADO_REPRODUCIENDO);
-        gui.modoAleatorio(state.shuffle);
-        gui.modoRepetecion(state.repeat_mode);
-        console.log(state);
-    });
+        // Playback status updates
+        $poneSpoty.addListener('player_state_changed', state => {
+            gui.reproduciendo(state.paused ? gui.ESTADO_PAUSADO : gui.ESTADO_REPRODUCIENDO);
+            gui.modoAleatorio(state.shuffle);
+            gui.modoRepetecion(state.repeat_mode);
+            //console.log(state);
+            gui.debug(gui.DEBUG_TIPO_VERBOSE, 'Cambio de estado recibido!.');
+        });
 
-    // Ready
-    $poneSpoty.addListener('ready', ({ device_id }) => {
-        gui.conectado(true);
-        console.log('poneSpoty se conectó', device_id);
-    });
+        // Ready
+        $poneSpoty.addListener('ready', ({device_id}) => {
+            gui.conectado(true);
+            gui.debug(gui.DEBUG_TIPO_VERBOSE, 'ponéSpoty! se conectó ' + device_id);
+        });
 
-    // Not Ready
-    $poneSpoty.addListener('not_ready', ({ device_id }) => {
-        gui.conectado(false);
-        console.log('poneSpoty se desconectó', device_id);
-    });
+        // Not Ready
+        $poneSpoty.addListener('not_ready', ({device_id}) => {
+            gui.conectado(false);
+            gui.debug(gui.DEBUG_TIPO_VERBOSE, 'ponéSpoty! se desconectó ' + device_id);
+        });
 
-    gui.inicializar();
-    // Connect to the player!
-    $poneSpoty.connect();
+        // Connect to the player!
+        $poneSpoty.connect();
+    }
 };
+
+
+/**
+ * Al injectarse el Player de Spotify, define un iframe de una forma que no le agrada al Chrome, es por eso que se
+ * aplica este parche basado en la respuesta:
+ *  https://github.com/spotify/web-playback-sdk/issues/75#issuecomment-487325589
+ */
+function parcheChrome(){
+    if(navigator.appVersion.match(/Chrome|Chromium/)) {
+        gui.debug(gui.DEBUG_TIPO_VERBOSE,'Se aplica el parche para Chrome/Chromium.');
+
+        const iframe = document.querySelector('iframe[src="https://sdk.scdn.co/embedded/index.html"]');
+
+        if (iframe) {
+            iframe.style.display = 'block';
+            iframe.style.position = 'absolute';
+            iframe.style.top = '-1000px';
+            iframe.style.left = '-1000px';
+        }
+    }
+}
