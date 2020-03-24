@@ -12,7 +12,7 @@ var config = {
 config.service= {
     schema: 'https',
     host: 'gcosta87.github.com/poneSpoty',
-    port: 8000
+    port: 80
 };
 
 //Credenciales y de más parámetros requeridos...
