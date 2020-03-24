@@ -13,7 +13,7 @@ var config = {
 //Propiedades que impactan al levantar el servicio y/o tras autenticarse en Spotify
 config.service= {
     schema: 'https',
-    host: 'gcosta87.github.com/poneSpoty',
+    host: 'gcosta87.github.io/poneSpoty',
     port: 80,
 
 };
