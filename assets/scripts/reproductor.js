@@ -37,6 +37,14 @@ var gui = {
         modoAleatorio: null
     },
 
+    labels: {
+        track: {
+            context:    null,
+            title:      null,
+            artist:     null
+        }
+    },
+
     $debug: null,
     //Seters / funciones basicas
     __cambiarColor:function(target,color){
@@ -60,6 +68,11 @@ var gui = {
         this.botones.modoRepetecion=$('#modo_repetecion');
         this.botones.modoAleatorio= $('#modo_aleatorio');
 
+        //track info
+        this.labels.track.artist =  $('span#track_artist');
+        this.labels.track.title =   $('span#track_title');
+        this.labels.track.context = $('span#track_context');
+
         this.$debug = $('textarea#debugLog');
 
         //inicializacion del form de Auth
@@ -74,6 +87,10 @@ var gui = {
 
         //otras configs menores
         $('#mainLink').prop('href',config.service.base_url);
+        $( "#formLog #reset" ).click(function() {
+            //se limpia el log
+           gui.debugClear();
+        });
     },
 
     /**
@@ -87,18 +104,31 @@ var gui = {
             var now = new Date();
             var fechaString = now.getHours().toString().padStart(2, '0')+":"+now.getMinutes().toString().padStart(2, '0');
             this.$debug.append("[" + fechaString + " " + (tipo == this.DEBUG_TIPO_ERROR? "***"+tipo.toUpperCase()+"***":tipo) + "]: " + msj + "\n");
+
+            //se mueve el scroll al final
+            this.$debug.scrollTop(this.$debug.prop('scrollHeight') - this.$debug.height());
         }
+    },
+
+    debugClear:function(){
+        this.$debug.val('');
     },
 
     conectado:function(conectado){
         if(conectado){
             this.__cambiarColorActivado(this.botones.conectado);
+            //desplazo al usuario a la seccion correspondiente
+            $('a[href="#escuchar"]').tab('show');
+            //se deshabilita el boton de pedir permisos
+            $("#permisosForm button[type='submit']").prop('disabled',true);
         }
         else{
+            this.reproduciendo(this.ESTADO_DETENIDO);
+            this.trackClear();
             this.__cambiarColorDesactivado(this.botones.conectado);
+            $("#permisosForm button[type='submit']").prop('disabled',false);
         }
     },
-
 
     reproduciendo:function(estado){
         var boton = this.botones.reproduciendo;
@@ -147,7 +177,17 @@ var gui = {
         }
     },
 
+    track:function(context, title, artist){
+        this.labels.track.context.text(context);
+        this.labels.track.title.text(title);
+        this.labels.track.artist.text(artist);
+    },
 
+    trackClear:function(){
+        this.labels.track.context.text('');
+        this.labels.track.title.text('');
+        this.labels.track.artist.text('');
+    },
 };
 
 /**
@@ -191,13 +231,13 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
         // Error handling
         $poneSpoty.addListener('initialization_error', ({message}) => {
-            gui.debug(gui.DEBUG_TIPO_ERROR, 'Ocurrio un error al inicializar:  ' + message);
+            gui.debug(gui.DEBUG_TIPO_ERROR, 'Ocurrio un error al inicializar el reproductor por presuntos problemas de compatibilidad del browser. Motivo:  ' + message);
         });
         $poneSpoty.addListener('authentication_error', ({message}) => {
             gui.debug(gui.DEBUG_TIPO_ERROR, 'Ocurrio un error al autenticar:  ' + message);
         });
         $poneSpoty.addListener('account_error', ({message}) => {
-            gui.debug(gui.DEBUG_TIPO_ERROR, 'Ocurrio un error asociado a la cuenta de usuario:  ' + message);
+            gui.debug(gui.DEBUG_TIPO_ERROR, 'Ocurrio un error asociado a la cuenta de usuario, verifique si ud posee una cuenta Premium. Motivo:  ' + message);
         });
         $poneSpoty.addListener('playback_error', ({message}) => {
             gui.debug(gui.DEBUG_TIPO_ERROR, 'Ocurrio un error al reproducir:  ' + message);
@@ -205,23 +245,43 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
         // Playback status updates
         $poneSpoty.addListener('player_state_changed', state => {
-            gui.reproduciendo(state.paused ? gui.ESTADO_PAUSADO : gui.ESTADO_REPRODUCIENDO);
-            gui.modoAleatorio(state.shuffle);
-            gui.modoRepetecion(state.repeat_mode);
-            //console.log(state);
-            gui.debug(gui.DEBUG_TIPO_VERBOSE, 'Cambio de estado recibido!.');
+            //state == null, se desconecto el usuario.
+            // state <> null el usuario esta conectado y posiblemente haya hecho alguna accion o cambio el contexto/contenido de streaming
+            gui.debug(gui.DEBUG_TIPO_VERBOSE, 'Cambio de estado recibido, '+((state == null)?'sin':'con')+' información de contexto.');
+
+            if(state != null) {
+                //conectado
+                gui.reproduciendo(state.paused ? gui.ESTADO_PAUSADO : gui.ESTADO_REPRODUCIENDO);
+                //track info
+                var artists_string =state.track_window.current_track.artists.map(function(obj) {
+                    return obj['name'];
+                }).join();
+                gui.track(
+                        state.context.metadata.context_description,
+                        state.track_window.current_track.name,
+                        artists_string,
+                );
+
+                gui.modoAleatorio(state.shuffle);
+                gui.modoRepetecion(state.repeat_mode);
+            }
+            else{
+                //desconectado
+                gui.conectado(false);
+                gui.debug(gui.DEBUG_TIPO_VERBOSE, 'ponéSpoty! ha sido desvinculado de la cuenta del usuario.');
+            }
         });
 
         // Ready
         $poneSpoty.addListener('ready', ({device_id}) => {
             gui.conectado(true);
-            gui.debug(gui.DEBUG_TIPO_VERBOSE, 'ponéSpoty! se conectó ' + device_id);
+            gui.debug(gui.DEBUG_TIPO_VERBOSE, 'ponéSpoty! se conectó al dispositivo ' + device_id);
         });
 
         // Not Ready
         $poneSpoty.addListener('not_ready', ({device_id}) => {
             gui.conectado(false);
-            gui.debug(gui.DEBUG_TIPO_VERBOSE, 'ponéSpoty! se desconectó ' + device_id);
+            gui.debug(gui.DEBUG_TIPO_VERBOSE, 'ponéSpoty! se desconectó del dispositivo ' + device_id+'. Revise la conexión a internet.');
         });
 
         // Connect to the player!

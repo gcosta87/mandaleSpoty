@@ -2,7 +2,7 @@
 Configuración global requerido
 */
 var config = {
-    version: '0.3 beta',
+    version: '0.5 beta',
     /*
         indica si se imprimen (o no) los mensajes de verbose en el debugger
      */

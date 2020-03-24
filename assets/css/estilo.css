@@ -3,9 +3,41 @@
 }
 
 /*Botones del reproductor */
+.escuchar p.lead{
+    vertical-align: center;
+    display: inline-block;
+}
+
 .comando{
 	font-size: 5em;
 	margin: 0.5em;
+}
+
+#conectado{
+    font-size: 1.4em;
+    display: inline-block;
+}
+
+.track_info{
+    display: inherit;
+    text-align: center;
+}
+
+#track_title{
+    font-size: 1.8em;
+    text-transform: capitalize;
+}
+
+#track_artist{
+    font-size: 1.2em;
+    text-transform: uppercase;
+    color: #cccccc;
+}
+
+#track_context{
+    font-size: 1em;
+    font-style: italic;
+    color:#cccccc;
 }
 
 .modo{
@@ -13,6 +45,7 @@
 	margin:0.5em;
 	color: rgba(255,255,255,0.6);
 }
+
 
 .fa-pause{
       animation: blink 2s steps(2, start) infinite;
@@ -42,7 +75,7 @@ main.cover{
 }
 
 h3.masthead-brand sup.version{
-    font-color: white;
+    color: white;
     font-size:0.4em;
     margin-left: 5px;
     top: -1em;
@@ -79,4 +112,7 @@ p.copyright{
     font-size: 0.8em;
 }
 /* Github Corner*/
+.github-corner{
+    height: 80px;   //igual al tamaño de imagen
+}
 .github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}

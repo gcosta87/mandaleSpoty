@@ -26,7 +26,6 @@
                     <nav class="nav nav-masthead justify-content-center">
                         <a tabindex="1" class="nav-link active" id="inicio-tab"  data-toggle="tab" href="#inicio" role="tab"><i class="fas fa-home fa-fw"></i> inicio</a>
                         <a tabindex="2" class="nav-link" id="escuchar-tab"  data-toggle="tab" href="#escuchar" role="tab"><i class="fas fa-play fa-fw"></i> mandale play!</a>
-                        <a tabindex="3" class="nav-link" id="acercade-tab"  data-toggle="tab" href="#acercade" role="tab"><i class="fas fa-info fa-fw"></i> acerca de</a>
                         <a tabindex="4"  class="nav-link" id="debug-tab"  data-toggle="tab" href="#debug" role="tab"><i class="fas fa-bug fa-fw"></i> debug</a>
                     </nav>
                 </div>
@@ -70,6 +69,10 @@
                             <span class="comando" id="conectado">
                                 <i  class="fab fa-spotify"></i>
                             </span>
+                            <br/>
+                            <span class="track_info" id="track_context"></span>
+                            <span class="track_info" id="track_title"></span>
+                            <span class="track_info" id="track_artist"></span>
                             <span class="comando" id="reproduciendo">
                                 <i class="fas fa-stop fa-blink"></i>
                             </span>
@@ -82,12 +85,12 @@
                                 <i  class="fas fa-random"></i>
                             </span>
                         </p>
-                    </div>
-
-
-                    <!-- Seccion Acerca de -->
-                    <div class="tab-pane" id="acercade" role="tabpanel" aria-labelledby="acercade-tab">
-                        <h1 class="cover-heading">Acerca de</h1>
+                        <!--
+                        <div class="alert alert-info" id="playerAlert">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <span id="playerAlert-msj">Product have added to your wishlist.</span>
+                        </div>
+                        -->
                     </div>
 
                     <!-- Seccion debugLog -->
@@ -97,7 +100,7 @@
                             <div class="form-group">
                                 <textarea class="form-control" id="debugLog" rows="10" wrap="off"></textarea>
                             </div>
-                            <input tabindex="5"  type="reset" class="btn btn-sm btn-outline-primary" value="Limpiar" onclick="$('#formLog textarea').val('');"/>
+                            <a tabindex="5" class="btn btn-sm btn-outline-primary" id="reset">Limpiar</a>
                         </form>
                     </div>
 
@@ -114,6 +117,7 @@
                     <p class="copyright">Cover template by <a  tabindex="-1"  href="https://twitter.com/mdo" target="_blank">@mdo</a>.</p>
                 </div>
             </footer>
+
         </div>
 
         <a tabindex="-1" href="https://github.com/gcosta87/poneSpoty" class="github-corner" aria-label="Mejorame en GitHub" title="Mejorame en GitHub!" target="_blank"><img width="80" height="80" src="assets/imagenes/github-corner.svg" /></a>
