@@ -14,7 +14,7 @@
 }
 
 #conectado{
-    font-size: 1.4em;
+    font-size: 1.2em;
     display: inline-block;
 }
 
@@ -31,7 +31,7 @@
 #track_artist{
     font-size: 1.2em;
     text-transform: uppercase;
-    color: #cccccc;
+    color: #bbb;
 }
 
 #track_context{

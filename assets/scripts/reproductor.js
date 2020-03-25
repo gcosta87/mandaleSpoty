@@ -253,15 +253,31 @@ window.onSpotifyWebPlaybackSDKReady = () => {
                 //conectado
                 gui.reproduciendo(state.paused ? gui.ESTADO_PAUSADO : gui.ESTADO_REPRODUCIENDO);
                 //track info
-                var artists_string =state.track_window.current_track.artists.map(function(obj) {
-                    return obj['name'];
-                }).join();
+                var artists_array =state.track_window.current_track.artists;
+                var artists_string = '';
+                if(artists_array.length == 1){
+                    artists_string = artists_array[0].name;
+                }
+                else{
+                    var more_than_3 = false;
+                    if(artists_array.length >= 3){
+                        //se queda con los primeros 3 artistias
+                        artists_array = artists_array.slice(0,3);
+                        more_than_3 =true;
+                    }
+                    artists_string = artists_array.map(function(obj) {
+                        return obj['name'];
+                    }).join();
+
+                    if(more_than_3){
+                        artists_string = artists_string + ',…';
+                    }
+                }
                 gui.track(
-                        state.context.metadata.context_description,
+                    (!Object.keys(state.context.metadata).length)? state.context.metadata.context_description:'',
                         state.track_window.current_track.name,
                         artists_string,
                 );
-
                 gui.modoAleatorio(state.shuffle);
                 gui.modoRepetecion(state.repeat_mode);
             }
