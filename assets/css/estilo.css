@@ -2,12 +2,15 @@
     font-family: 'Source Sans Pro','sans-serif' ;
 }
 
-/*Botones del reproductor */
-.escuchar p.lead{
-    vertical-align: center;
-    display: inline-block;
+/*Botones del reproductor #escuchar comando*/
+#escuchar{
+    position: relative;
 }
-
+#escuchar i.fullscreen{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
 .comando{
 	font-size: 5em;
 	margin: 0.5em;
@@ -116,3 +119,16 @@ p.copyright{
     height: 80px;   //igual al tamaño de imagen
 }
 .github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}
+
+/* Fullscreen mode */
+:fullscreen .lead{
+    padding: 2em;
+    margin-top: 6vh;
+    margin-bottom: 2vh;
+}
+
+:fullscreen * {
+    padding: 0.25em;
+    max-width: 800px;
+    margin:auto;
+}

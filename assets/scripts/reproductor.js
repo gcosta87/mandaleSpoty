@@ -188,6 +188,31 @@ var gui = {
         this.labels.track.title.text('');
         this.labels.track.artist.text('');
     },
+    //Analiza si puede realizar el cambio a fullscreen y viceversa
+    fullscreenMode:function(){
+        //fullscreen is supported?
+        if(document.fullscreenEnabled){
+            // fullscreen is activated
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+            else {
+                document.querySelector("#escuchar").requestFullscreen();
+            }
+        }
+    },
+    //Renderiza la interfaz segun el modo
+    fullscreenModeRender: function(){
+        if (!document.fullscreenElement) {
+            $('i.fullscreen').addClass('fa-expand');
+            $('i.fullscreen').removeClass('fa-compress');
+        }
+        else {
+            //document.querySelector("#escuchar").requestFullscreen();
+            $('i.fullscreen').addClass('fa-compress');
+            $('i.fullscreen').removeClass('fa-expand');
+        }
+    }
 };
 
 /**
@@ -196,22 +221,43 @@ var gui = {
  */
 function obtenerToken(){
     var token = TOKEN_NO_VALIDO;
+    var session = {};
     gui.debug(gui.DEBUG_TIPO_VERBOSE,'Obtencion del Token...');
+
+
     //intento leer el token del query params... /#access_token=aabbccc....
     if(window.location.hash){
         gui.debug(gui.DEBUG_TIPO_VERBOSE,'Presencia de token en URL, se procede a extraerlo.');
         var urlSearchParams = new URLSearchParams(window.location.hash.replace('#','?'));
         if(urlSearchParams.has('access_token')){
             token = urlSearchParams.get('access_token');
-            gui.debug(gui.DEBUG_TIPO_VERBOSE,'se extrajo el token correctamente!.');
+            gui.debug(gui.DEBUG_TIPO_VERBOSE,'Se extrajo el token correctamente!.');
+            var expiresDate = new Date();
+            expiresDate.setTime(expiresDate.getTime() + (parseInt(urlSearchParams.get('expires_in'))*1000));
+            session = {
+                "token":token,
+                "expires": expiresDate
+            };
+            document.cookie = JSON.stringify(session)+";"+expiresDate.toUTCString();
+            gui.debug(gui.DEBUG_TIPO_VERBOSE,'Se guardó una cookie con los datos de la sesión!.');
         }
     }
     else{
         gui.debug(gui.DEBUG_TIPO_VERBOSE,'Token no hallado en URL.');
-        //TODO intentar recuperar de una cookie o algo similar
+
+        if(document.cookie){
+            gui.debug(gui.DEBUG_TIPO_VERBOSE,'Se detectó una cookie.');
+            session = JSON.parse(document.cookie);
+            //Se recupera el token
+            token = session.token;
+            gui.debug(gui.DEBUG_TIPO_VERBOSE,'Token recuperado a partir de cookie.');
+            gui.debug(gui.DEBUG_TIPO_VERBOSE,'Los permisos durarán hasta '+new Date(session.expires).toLocaleTimeString());
+        }
     }
     return token;
 }
+
+
 window.onSpotifyWebPlaybackSDKReady = () => {
     gui.inicializar();
     gui.debug(gui.DEBUG_TIPO_VERBOSE,'Inicializacion del SDK correcta!.');
@@ -304,3 +350,16 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         $poneSpoty.connect();
     }
 };
+
+//Extras
+/**
+ * Listener para detectar cambios de fullscreen, y acomodar los iconos de la interfaz
+ */
+document.addEventListener("fullscreenchange", function (event) {
+    gui.fullscreenModeRender();
+});
+
+function fullscreenMode() {
+    gui.fullscreenMode();
+}
+
